@@ -1,0 +1,8 @@
+__pycache__/
+*.py[cod]
+.pytest_cache/
+test-media/
+data/
+.env
+*.tar
+*.tar.gz

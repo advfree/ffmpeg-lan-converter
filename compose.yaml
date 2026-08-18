@@ -1,0 +1,22 @@
+services:
+  ffmpeg-converter:
+    build: .
+    container_name: ffmpeg-converter
+    restart: unless-stopped
+    ports:
+      - "10888:10888"
+    environment:
+      TZ: ${TZ:-Asia/Shanghai}
+      PORT: "10888"
+      MEDIA_ROOT: ${CONTAINER_MEDIA_ROOT:-/media}
+      APP_USERNAME: ${APP_USERNAME:-root}
+      APP_PASSWORD: ${APP_PASSWORD:-}
+    volumes:
+      # 登录配置保存在当前项目目录。
+      - ./data:/data
+      # 修改 .env 中的路径即可访问主机上的其他媒体目录。
+      - "${HOST_MEDIA_ROOT:-./files}:${CONTAINER_MEDIA_ROOT:-/media}"
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL

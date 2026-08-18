@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>FFmpeg 转换台</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <main id="loginView" class="login-shell">
+    <form id="loginForm" class="card login-card">
+      <div class="brand-mark">FF</div>
+      <h1>FFmpeg 转换台</h1>
+      <p class="muted">内网媒体格式转换</p>
+      <label>账号<input id="username" autocomplete="username" value="root" required></label>
+      <label>密码<input id="password" type="password" autocomplete="current-password" required></label>
+      <button type="submit" class="primary">登录</button>
+      <p id="loginError" class="error"></p>
+    </form>
+  </main>
+
+  <div id="appView" class="app hidden">
+    <header>
+      <div class="brand"><span class="brand-mark small">FF</span><div><strong>FFmpeg 转换台</strong><span>本地 · 安全 · 批量</span></div></div>
+      <div class="header-actions">
+        <select id="theme" aria-label="主题"><option value="system">随系统</option><option value="light">浅色</option><option value="dark">深色</option></select>
+        <button id="passwordButton" class="ghost">修改密码</button>
+        <button id="logoutButton" class="ghost">退出</button>
+      </div>
+    </header>
+    <main class="workspace">
+      <section class="card source-card">
+        <div class="section-title"><div><span class="eyebrow">第一步</span><h2>选择源文件</h2></div><span id="pathBadge" class="badge">/media</span></div>
+        <div class="toolbar">
+          <button id="upButton" class="ghost">← 上一级</button>
+          <button id="scanButton">扫描当前文件夹</button>
+          <label class="check"><input id="recursive" type="checkbox" checked> 包含子文件夹</label>
+        </div>
+        <div class="path-entry">
+          <input id="sourcePath" value="/media" placeholder="例如 /media" aria-label="源文件或文件夹路径">
+          <button id="openPathButton" type="button">打开路径</button>
+        </div>
+        <small class="path-help">可输入已挂载媒体目录内的文件或文件夹</small>
+        <div id="browser" class="browser"></div>
+        <div class="selection-bar">
+          <label class="check"><input id="selectAll" type="checkbox"> 全选</label>
+          <span id="selectionCount">已选择 0 个文件</span>
+          <button id="clearButton" class="link">清空</button>
+        </div>
+        <div id="files" class="files"><div class="empty">选择单个文件，或扫描文件夹开始</div></div>
+      </section>
+
+      <aside class="card settings-card">
+        <span class="eyebrow">第二步</span><h2>转换设置</h2>
+        <label>输出格式<select id="preset"></select></label>
+        <div id="presetHint" class="hint"></div>
+        <label>文件名后缀<input id="suffix" value="" maxlength="40" placeholder="留空 = 仅改变格式"><small>留空时保留原文件名，仅改变扩展名</small></label>
+        <label>输出文件夹<div class="input-action"><input id="outputDir" placeholder="留空 = 源文件夹"><button id="chooseOutput" type="button">浏览</button></div><small>可直接输入已挂载媒体目录内已有的文件夹</small></label>
+        <label>同名文件<select id="overwrite"><option value="skip" selected>跳过</option><option value="rename">自动加序号</option><option value="overwrite">覆盖目标文件</option></select></label>
+        <label class="danger-check"><input id="deleteSources" type="checkbox"><span><strong>成功后删除源文件</strong><small>仅在转换完成且 FFprobe 校验通过后删除</small></span></label>
+        <button id="convertButton" class="primary large" disabled>开始转换 <span id="convertCount">0</span> 个文件</button>
+        <p id="actionError" class="error"></p>
+      </aside>
+
+      <section class="card jobs-card">
+        <div class="section-title"><div><span class="eyebrow">任务中心</span><h2>转换进度</h2></div><button id="refreshJobs" class="ghost">刷新</button></div>
+        <div id="jobs" class="jobs"><div class="empty">还没有转换任务</div></div>
+      </section>
+    </main>
+  </div>
+
+  <dialog id="directoryDialog"><form method="dialog" class="dialog-card"><div class="section-title"><h2>选择输出文件夹</h2><button value="cancel" class="ghost">✕</button></div><div id="directoryBrowser" class="browser dialog-browser"></div><div class="dialog-actions"><button value="cancel">取消</button><button id="useDirectory" value="default" class="primary">使用当前文件夹</button></div></form></dialog>
+  <dialog id="passwordDialog"><form id="passwordForm" class="dialog-card"><div class="section-title"><h2>修改密码</h2><button type="button" data-close-password class="ghost">✕</button></div><label>当前密码<input id="currentPassword" type="password" required></label><label>新密码<input id="newPassword" type="password" minlength="12" required><small>至少 12 个字符</small></label><div class="dialog-actions"><button type="button" data-close-password>取消</button><button class="primary">保存</button></div><p id="passwordError" class="error"></p></form></dialog>
+  <div id="toast" class="toast"></div>
+  <script src="/app.js" defer></script>
+</body>
+</html>
